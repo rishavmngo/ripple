@@ -39,3 +39,7 @@ export const LISTS: TListItem[] = [
     itemColor: COLOR_PALLETE[4],
   },
 ];
+
+export function getById(id) {
+  return LISTS.find(item => item.id === id);
+}

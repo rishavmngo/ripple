@@ -1,7 +1,6 @@
 import ListSection from '@/components/List';
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-
 function Home() {
   return (
     <View style={style.view}>
