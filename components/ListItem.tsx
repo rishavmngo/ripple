@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
+import {Pressable, StyleSheet} from 'react-native';
 import {TListItem} from '@/model';
 import {displayDuration} from '@/utils/Utils';
 import Animated from 'react-native-reanimated';
@@ -17,26 +17,39 @@ function ListItem({item, index}: ListItemProps) {
   const navigation =
     useNavigation<NativeStackNavigationProp<SharedElementStackParamList>>();
   return (
-    <View style={[index === 0 && style.firstElement]}>
+    // <View style={[index === 0 && style.firstElement]}>
+    <Pressable
+      onPress={() => {
+        navigation.navigate('Detail', {id: item.id});
+      }}
+      style={[index === 0 && style.firstElement]}>
       <Animated.View
         sharedTransitionTag={item.id}
-        style={[style.mainContainer, {backgroundColor: item.itemColor}]}
-      />
-
-      <Pressable
-        style={[style.innerContainer]}
-        onPress={() => {
-          navigation.navigate('Detail', {id: item.id});
-        }}>
-        <Animated.Text style={style.durationText}>
+        style={[style.mainContainer, {backgroundColor: item.itemColor}]}>
+        <Animated.Text
+          style={style.durationText}
+          sharedTransitionTag={`${item.id}-duration-text`}>
           {displayDuration(item.totalDurationOfTasks)}
         </Animated.Text>
-        <Animated.Text style={style.titleText}>{item.title}</Animated.Text>
-        <Animated.Text style={style.noOfItemsText}>
-          {paddedNumber} items
+
+        <Animated.Text
+          style={style.titleText}
+          sharedTransitionTag={`${item.id}-title-text`}>
+          {item.title}
         </Animated.Text>
-      </Pressable>
-    </View>
+      </Animated.View>
+
+      <Animated.Text style={style.noOfItemsText}>
+        {paddedNumber} items
+      </Animated.Text>
+    </Pressable>
+
+    // <Pressable
+    //   style={[style.innerContainer]}
+    //   <Animated.Text style={style.noOfItemsText}>
+    //     {paddedNumber} items
+    //   </Animated.Text>
+    // </Pressable>
   );
 }
 
@@ -44,17 +57,8 @@ const style = StyleSheet.create({
   mainContainer: {
     borderRadius: 40,
     margin: 5,
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'red',
-  },
-  innerContainer: {
     height: 200,
     width: 200,
-    padding: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -71,8 +75,8 @@ const style = StyleSheet.create({
     left: 20,
     fontSize: 15,
     backgroundColor: '#403E3C',
-    paddingVertical: 4,
-    paddingHorizontal: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderRadius: 20,
   },
   noOfItemsText: {
