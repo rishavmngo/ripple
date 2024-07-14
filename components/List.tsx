@@ -1,10 +1,35 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import ListItem from '@/components/ListItem';
 import {LISTS} from '@/data';
+import {useSQLiteContext} from 'expo-sqlite';
 
 export default function ListSection() {
+  const db = useSQLiteContext();
+
+  useEffect(() => {
+    async function setup() {
+      try {
+        type Trow = {
+          id: number;
+          title: string;
+          color: string;
+          created_at: string | null;
+          updated_at: string | null;
+        };
+        const allRows: Trow[] = await db.getAllAsync('SELECT * FROM Lists');
+
+        for (const row of allRows) {
+          console.error(row.updated_at);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    setup();
+  }, [db]);
+
   return (
     <View>
       <Text style={style.listSectionHeading}>Your lists</Text>
