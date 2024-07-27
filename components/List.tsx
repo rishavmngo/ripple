@@ -4,6 +4,7 @@ import {View, Text, StyleSheet, FlatList} from 'react-native';
 import ListItem from '@/components/ListItem';
 import {useSQLiteContext} from 'expo-sqlite';
 import {TListItem} from './List.types';
+import query from '@/queries/query';
 
 export default function ListSection() {
   const db = useSQLiteContext();
@@ -12,26 +13,7 @@ export default function ListSection() {
   useEffect(() => {
     async function setup() {
       try {
-        let results: TListItem[] = await db.getAllAsync(
-          `SELECT 
-  l.id,
-  l.title,
-  l.bg_color,
-  l.created_at,
-  l.updated_at,
-  IFNULL(SUM(t.duration), 0) AS total_duration,
-  IFNULL(COUNT(t.id), 0) AS total_tasks
-FROM 
-  Lists l
-LEFT JOIN 
-  Tasks t 
-ON 
-  l.id = t.list_id
-GROUP BY 
-  l.id;
-`,
-        );
-
+        let results: TListItem[] = await db.getAllAsync(query.SELECT_ALL_LISTS);
         setItems(results);
       } catch (error) {
         console.error(error);
