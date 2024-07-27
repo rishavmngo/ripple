@@ -1,55 +1,188 @@
-import {getById} from '@/data';
 import {displayDuration} from '@/utils/Utils';
-import BouncyCheckbox, {
-  BouncyCheckboxHandle,
-} from 'react-native-bouncy-checkbox';
-import React, {useRef} from 'react';
+import BouncyCheckbox from 'react-native-bouncy-checkbox';
+import React, {useEffect, useState} from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
-import Animated from 'react-native-reanimated';
+import {TListItem} from '@/components/List.types';
+import {useSQLiteContext} from 'expo-sqlite';
+import {TTask} from '@/models/Task.type';
+import {RouteProp} from '@react-navigation/native';
+import {Swipeable} from 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/FontAwesome6';
+type RootStackParamList = {
+  Detail: {id: string};
+};
 
-export default function Detail({route}) {
-  let bouncyCheckboxRef = useRef<BouncyCheckboxHandle>(null);
+type DetailScreenRouteProp = RouteProp<RootStackParamList, 'Detail'>;
+type DetailProps = {
+  route: DetailScreenRouteProp;
+};
+export default function Detail({route}: DetailProps) {
+  const db = useSQLiteContext();
   const id = route.params.id;
-  const item = getById(id);
-  if (!item) {
-    return;
+  const [tasks, setTasks] = useState<TTask[]>([]);
+  const [checkedStates, setCheckedStates] = useState<boolean[]>([]);
+  const [list, setList] = useState<TListItem | null>(null);
+
+  const handlePress = (taskId: number, index: number) => {
+    setCheckedStates(prevStates => {
+      const newStates = [...prevStates];
+      newStates[index] = !newStates[index];
+      return newStates;
+    });
+    toggleStatus(taskId, checkedStates[index] ? 'incomplete' : 'complete');
+  };
+
+  const toggleStatus = (taskId: number, status: string) => {
+    async function updateTask() {
+      try {
+        await db.runAsync('UPDATE Tasks set status = ? WHERE id = ?', [
+          status,
+          taskId,
+        ]);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    updateTask();
+  };
+
+  useEffect(() => {
+    async function getTasks() {
+      try {
+        let results: TTask[] = await db.getAllAsync(
+          'SELECT * FROM Tasks where list_id=?',
+          [id],
+        );
+
+        setTasks(results);
+
+        setCheckedStates(
+          results.map(task => (task.status === 'complete' ? true : false)),
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function getList() {
+      try {
+        let result: TListItem | null = await db.getFirstAsync(
+          `SELECT 
+  l.id,
+  l.title,
+  l.bg_color,
+  l.created_at,
+  l.updated_at,
+  IFNULL(SUM(t.duration), 0) AS total_duration
+FROM 
+  Lists l
+LEFT JOIN 
+  Tasks t 
+ON 
+  l.id = t.list_id
+WHERE l.id =? 
+GROUP BY 
+  l.id`,
+          [id],
+        );
+        setList(result);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getList();
+    getTasks();
+  }, [db, id]);
+
+  if (!list) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
   return (
     <View style={[style.container]}>
-      <Animated.View
-        sharedTransitionTag={item.id}
-        style={[style.innerContainer, {backgroundColor: item?.itemColor}]}>
+      <View
+        // sharedTransitionTag={list?.id.toString()}
+        style={[style.innerContainer, {backgroundColor: list?.bg_color}]}>
         <View style={style.headerSection}>
-          <Animated.Text
+          <Text
             style={style.titleText}
-            sharedTransitionTag={`${item.id}-title-text`}>
-            {item.title}
-          </Animated.Text>
-          <Animated.Text
+            // sharedTransitionTag={`${list?.id}-title-text`}
+          >
+            {list?.title}
+          </Text>
+          <Text
             style={style.listDurationText}
-            sharedTransitionTag={`${item.id}-duration-text`}>
-            {displayDuration(item.totalDurationOfTasks)}
-          </Animated.Text>
+            // sharedTransitionTag={`${list?.id}-duration-text`}
+          >
+            {displayDuration(list?.total_duration)} hr
+          </Text>
         </View>
-      </Animated.View>
-      <Pressable
-        onPress={() => {
-          if (bouncyCheckboxRef.current) {
-            bouncyCheckboxRef.current.onCheckboxPress();
-          }
-        }}
-        style={{margin: 10, marginTop: 90, flexDirection: 'row'}}>
-        <BouncyCheckbox ref={bouncyCheckboxRef} />
-        <View>
-          <Text style={style.taskDurationText}>01 hours</Text>
-          <Text style={style.taskTitleText}>Mathematics-II</Text>
-        </View>
-      </Pressable>
+      </View>
+      <View style={style.itemsContainer}>
+        {tasks.map((task: TTask, index: number) => (
+          <Swipeable
+            containerStyle={{
+              margin: 10,
+            }}
+            onSwipeableOpen={event => {
+              console.log(event);
+            }}
+            rightThreshold={30}
+            renderRightActions={() => (
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  width: '100%',
+                  justifyContent: 'center',
+                  alignItems: 'flex-end',
+                  borderRadius: 5,
+                }}>
+                <Icon
+                  name="trash-can"
+                  style={{marginRight: 20, color: list.bg_color}}
+                  size={20}
+                />
+              </View>
+            )}>
+            <Pressable
+              key={`taks-${task.id}`}
+              style={{
+                backgroundColor: list.bg_color,
+
+                borderRadius: 5,
+                ...style.listItem,
+              }}
+              onPress={() => handlePress(task.id, index)}
+              onLongPress={() => console.log('heell')}>
+              <BouncyCheckbox
+                isChecked={checkedStates[index]}
+                onPress={() => handlePress(task.id, index)}
+              />
+              <View>
+                <>
+                  <Text style={style.taskDurationText}>
+                    {displayDuration(task.duration)} hours
+                  </Text>
+                  <Text style={style.taskTitleText}>{task.title}</Text>
+                </>
+              </View>
+            </Pressable>
+          </Swipeable>
+        ))}
+      </View>
     </View>
   );
 }
 
 const style = StyleSheet.create({
+  itemsContainer: {
+    marginHorizontal: 10,
+    marginTop: 90,
+  },
+  listItem: {flexDirection: 'row'},
   container: {
     flex: 1,
   },

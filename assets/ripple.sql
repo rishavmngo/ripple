@@ -30,3 +30,25 @@ CREATE TABLE IF NOT EXISTS Timers (
 
 
 INSERT INTO Lists(title,bg_color,created_at) VALUES('Study','#0f0f0f',CURRENT_TIMESTAMP);
+INSERT INTO Tasks(title,duration,status,list_id,created_at) VALUES('Mathematics II',25, 'incomplete',2,CURRENT_TIMESTAMP);
+INSERT INTO Tasks(title,duration,status,list_id,created_at) VALUES('react native',150, 'incomplete',2,CURRENT_TIMESTAMP);
+
+
+
+
+SELECT 
+  l.id,
+  l.title,
+  l.bg_color,
+  l.created_at,
+  l.updated_at,
+  IFNULL(SUM(t.duration), 0) AS total_duration
+FROM 
+  Lists l
+LEFT JOIN 
+  Tasks t 
+ON 
+  l.id = t.list_id
+WHERE l.id = 2
+GROUP BY 
+  l.id;

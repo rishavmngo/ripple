@@ -10,18 +10,27 @@ export const COLOR_PALLETE = [
   '#80B9AD',
 ];
 
-export function displayDuration(timeInMiliseconds: number): string {
-  const timeInMinutes = timeInMiliseconds / (1000 * 60);
-
+export function displayDuration(timeInMinutes: number): string {
   if (timeInMinutes < 60) {
     return `${Math.round(timeInMinutes)} mins`;
   } else {
-    return `${(timeInMinutes / 60).toFixed(2)} hr`;
+    return `${(timeInMinutes / 60).toFixed(2)}`;
   }
+}
+export function padNumber(num: number, pad: number, char = '0') {
+  return String(num).padStart(pad, char);
 }
 
 export function getRandomColorFromPallet(): string {
   const index = Math.floor(Math.random() * (COLOR_PALLETE.length - 1));
 
   return COLOR_PALLETE[index];
+}
+
+export function sleep(milliseconds: number) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
 }

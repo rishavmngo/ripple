@@ -1,11 +1,8 @@
 import React from 'react';
-import {Pressable, StyleSheet} from 'react-native';
-import {TListItem} from '@/model';
-import {displayDuration} from '@/utils/Utils';
-import Animated from 'react-native-reanimated';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
+import {displayDuration, padNumber} from '@/utils/Utils';
 import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {SharedElementStackParamList} from '@/App';
+import {TListItem} from './List.types';
 
 interface ListItemProps {
   item: TListItem;
@@ -13,43 +10,25 @@ interface ListItemProps {
 }
 
 function ListItem({item, index}: ListItemProps) {
-  const paddedNumber = String(item.noOfItems).padStart(2, '0');
-  const navigation =
-    useNavigation<NativeStackNavigationProp<SharedElementStackParamList>>();
+  const navigation = useNavigation();
   return (
-    // <View style={[index === 0 && style.firstElement]}>
     <Pressable
       onPress={() => {
-        navigation.navigate('Detail', {id: item.id});
+        navigation.navigate('Detail', {id: item.id.toString()});
       }}
       style={[index === 0 && style.firstElement]}>
-      <Animated.View
-        sharedTransitionTag={item.id}
-        style={[style.mainContainer, {backgroundColor: item.itemColor}]}>
-        <Animated.Text
-          style={style.durationText}
-          sharedTransitionTag={`${item.id}-duration-text`}>
-          {displayDuration(item.totalDurationOfTasks)}
-        </Animated.Text>
+      <View style={[style.mainContainer, {backgroundColor: item.bg_color}]}>
+        <Text style={style.durationText}>
+          {displayDuration(item.total_duration)} hr
+        </Text>
 
-        <Animated.Text
-          style={style.titleText}
-          sharedTransitionTag={`${item.id}-title-text`}>
-          {item.title}
-        </Animated.Text>
-      </Animated.View>
+        <Text style={style.titleText}>{item.title}</Text>
+      </View>
 
-      <Animated.Text style={style.noOfItemsText}>
-        {paddedNumber} items
-      </Animated.Text>
+      <Text style={style.noOfItemsText}>
+        {padNumber(item.total_tasks, 2)} items
+      </Text>
     </Pressable>
-
-    // <Pressable
-    //   style={[style.innerContainer]}
-    //   <Animated.Text style={style.noOfItemsText}>
-    //     {paddedNumber} items
-    //   </Animated.Text>
-    // </Pressable>
   );
 }
 

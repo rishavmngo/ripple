@@ -1,28 +1,38 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import ListItem from '@/components/ListItem';
-import {LISTS} from '@/data';
 import {useSQLiteContext} from 'expo-sqlite';
+import {TListItem} from './List.types';
 
 export default function ListSection() {
   const db = useSQLiteContext();
+  const [items, setItems] = useState<TListItem[]>([]);
 
   useEffect(() => {
     async function setup() {
       try {
-        type Trow = {
-          id: number;
-          title: string;
-          color: string;
-          created_at: string | null;
-          updated_at: string | null;
-        };
-        const allRows: Trow[] = await db.getAllAsync('SELECT * FROM Lists');
+        let results: TListItem[] = await db.getAllAsync(
+          `SELECT 
+  l.id,
+  l.title,
+  l.bg_color,
+  l.created_at,
+  l.updated_at,
+  IFNULL(SUM(t.duration), 0) AS total_duration,
+  IFNULL(COUNT(t.id), 0) AS total_tasks
+FROM 
+  Lists l
+LEFT JOIN 
+  Tasks t 
+ON 
+  l.id = t.list_id
+GROUP BY 
+  l.id;
+`,
+        );
 
-        for (const row of allRows) {
-          console.error(row.updated_at);
-        }
+        setItems(results);
       } catch (error) {
         console.error(error);
       }
@@ -34,10 +44,10 @@ export default function ListSection() {
     <View>
       <Text style={style.listSectionHeading}>Your lists</Text>
       <FlatList
-        data={LISTS}
+        data={items}
         horizontal={true}
         renderItem={({item, index}) => <ListItem item={item} index={index} />}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         style={style.listContainer}

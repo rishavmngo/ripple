@@ -10,33 +10,30 @@ import React from 'react';
 import Home from './screens/Home';
 import Detail from './screens/Details';
 import {SQLiteProvider} from 'expo-sqlite';
-// import {TListItem} from '@/model';
-
-export type SharedElementStackParamList = {
-  Home: undefined;
-  Detail: {id: string};
-};
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 function App() {
-  const Stack = createNativeStackNavigator<SharedElementStackParamList>();
+  const Stack = createNativeStackNavigator();
   return (
     <SQLiteProvider
       databaseName="ripple.db"
       assetSource={{assetId: require('./assets/ripple.db')}}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Detail"
-            component={Detail}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <GestureHandlerRootView>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Detail"
+              component={Detail}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </GestureHandlerRootView>
     </SQLiteProvider>
   );
 }

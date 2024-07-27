@@ -1,6 +1,7 @@
 import ListSection from '@/components/List';
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 function Home() {
   return (
     <View style={style.view}>
