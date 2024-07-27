@@ -2,7 +2,7 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {displayDuration, padNumber} from '@/utils/Utils';
 import {useNavigation} from '@react-navigation/native';
-import {TListItem} from './List.types';
+import {TListItem} from '@/model';
 
 interface ListItemProps {
   item: TListItem;

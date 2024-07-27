@@ -1,10 +1,10 @@
-import React from 'react';
+import React, {Dispatch, SetStateAction, useRef} from 'react';
 import {StyleSheet, View, Text, Pressable} from 'react-native';
-import {TTask} from '@/models/Task.type';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 import {Swipeable} from 'react-native-gesture-handler';
 import {displayDuration} from '@/utils/Utils';
+import {TCurrentTask, TTask} from '@/model';
 
 type TaskProps = {
   task: TTask;
@@ -12,6 +12,9 @@ type TaskProps = {
   checked: boolean;
   bg_color: string;
   handlePress: Function;
+  dialogOpen: boolean;
+  toggleDialog: Function;
+  setCurrentTask: Dispatch<SetStateAction<TCurrentTask>>;
 };
 export default function TaskItem({
   task,
@@ -19,17 +22,25 @@ export default function TaskItem({
   checked,
   bg_color,
   handlePress,
+  dialogOpen,
+  toggleDialog,
+  setCurrentTask,
 }: TaskProps) {
-  console.log(task, checked);
+  const swipeableRef = useRef<Swipeable>(null);
+  const doSomeAction = (item: TTask) => {
+    setCurrentTask({task: item, ref: swipeableRef.current});
+    toggleDialog(!dialogOpen);
+  };
   return (
     <Swipeable
+      ref={swipeableRef}
       containerStyle={{
         margin: 10,
       }}
-      onSwipeableOpen={event => {
-        console.log(event);
+      onSwipeableOpen={() => {
+        doSomeAction(task);
       }}
-      rightThreshold={30}
+      rightThreshold={70}
       renderRightActions={() => (
         <View
           style={{

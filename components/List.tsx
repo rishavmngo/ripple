@@ -3,8 +3,8 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import ListItem from '@/components/ListItem';
 import {useSQLiteContext} from 'expo-sqlite';
-import {TListItem} from './List.types';
 import query from '@/queries/query';
+import {TListItem} from '@/model';
 
 export default function ListSection() {
   const db = useSQLiteContext();
