@@ -2,25 +2,23 @@ import React, {useEffect, useState} from 'react';
 
 import {View, Text, StyleSheet, FlatList} from 'react-native';
 import ListItem from '@/components/ListItem';
-import {useSQLiteContext} from 'expo-sqlite';
-import query from '@/queries/query';
 import {TListItem} from '@/model';
+import db from '@/db/db';
 
 export default function ListSection() {
-  const db = useSQLiteContext();
   const [items, setItems] = useState<TListItem[]>([]);
 
   useEffect(() => {
     async function setup() {
       try {
-        let results: TListItem[] = await db.getAllAsync(query.SELECT_ALL_LISTS);
+        let results: TListItem[] = await db.getAllLists();
         setItems(results);
       } catch (error) {
         console.error(error);
       }
     }
     setup();
-  }, [db]);
+  }, []);
 
   return (
     <View>
