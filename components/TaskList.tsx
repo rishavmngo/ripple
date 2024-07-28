@@ -42,6 +42,7 @@ export default function TaskList({tasks, bg_color}: TaskListProps) {
   const handleDelete = () => {
     if (currentTask.task) {
       DeleteTaskByID(currentTask.task.id, currentTask.task.list_id);
+      handleDialogClose();
     }
   };
 
@@ -78,12 +79,8 @@ export default function TaskList({tasks, bg_color}: TaskListProps) {
           Delete {currentTask.task?.title}?
         </Text>
         <View style={styles.buttonContainers}>
-          <Button
-            text={'cancel'}
-            bgColor="#363533"
-            onPress={handleDialogClose}
-          />
-          <Button text={'confirm'} bgColor={'#EF5A6F'} onPress={handleDelete} />
+          <Button text={'cancel'} onPress={handleDialogClose} />
+          <Button text={'confirm'} type="Danger" onPress={handleDelete} />
         </View>
       </Dialog>
       <FlatList

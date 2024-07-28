@@ -23,3 +23,5 @@ export type TCurrentTask = {
   task: TTask | null;
   ref: Swipeable | null;
 };
+
+export type ID = string | number;

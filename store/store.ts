@@ -1,5 +1,5 @@
 import db from '@/db/db';
-import {TTask} from '@/model';
+import {ID, TTask} from '@/model';
 import {create} from 'zustand';
 
 type state = {
@@ -7,11 +7,11 @@ type state = {
 };
 
 type Action = {
-  fetchTasks: (id: number) => void;
+  fetchTasks: (id: ID) => void;
 };
 export const useTasks = create<state & Action>(set => ({
   tasks: [],
-  fetchTasks: (id: number) => {
+  fetchTasks: (id: ID) => {
     try {
       db.getTasks(id)
         .then(tasks => {

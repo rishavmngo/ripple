@@ -1,8 +1,9 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {TouchableOpacity, StyleSheet} from 'react-native';
+
+import Icon from 'react-native-vector-icons/FontAwesome6';
 type ButtonType = 'Danger' | 'Warning' | '';
 type buttonProps = {
-  text: string;
   onPress: () => void;
   type?: ButtonType;
 };
@@ -17,8 +18,7 @@ function getStyle(type: ButtonType) {
       return {bgColor: '#363533', color: '#F8EDED'};
   }
 }
-export default function Button({
-  text,
+export default function ButtonIcon({
   type = '',
   onPress,
   ...props
@@ -32,24 +32,17 @@ export default function Button({
         backgroundColor: sty.bgColor,
         ...styles.button,
       }}>
-      <Text
-        style={{
-          color: sty.color,
-          ...styles.text,
-        }}>
-        {text}
-      </Text>
+      <Icon name="plus" style={{color: 'white'}} size={20} />
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    margin: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    padding: 15,
     borderRadius: 20,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     fontWeight: 'bold',
