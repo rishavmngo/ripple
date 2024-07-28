@@ -6,6 +6,7 @@ import query from '@/queries/query';
 import Dialog from './Dialog';
 import Button from './Button';
 import {TCurrentTask, TTask} from '@/model';
+import {useTasks} from '@/store/store';
 
 type TaskListProps = {
   tasks: TTask[];
@@ -14,13 +15,14 @@ type TaskListProps = {
 
 const MemoziedTaskItem = memo(TaskItem);
 export default function TaskList({tasks, bg_color}: TaskListProps) {
+  const db = useSQLiteContext();
   const [currentTask, setCurrentTask] = useState<TCurrentTask>({
     task: null,
     ref: null,
   });
   const [dialogOpen, toggleDialog] = useState(false);
-  const db = useSQLiteContext();
   const [checkedStates, setCheckedStates] = useState<boolean[]>([]);
+  const fetchTasks = useTasks(state => state.fetchTasks);
   const handlePress = (taskId: number, index: number) => {
     setCheckedStates(prevStates => {
       const newStates = [...prevStates];
@@ -36,6 +38,21 @@ export default function TaskList({tasks, bg_color}: TaskListProps) {
       currentTask.ref.close();
     }
   }
+
+  const handleDelete = () => {
+    if (currentTask.task) {
+      DeleteTaskByID(currentTask.task.id, currentTask.task.list_id);
+    }
+  };
+
+  const DeleteTaskByID = async (taskId: number, list_id: number) => {
+    try {
+      await db.runAsync(query.DELETE_TASK_BY_ID, [taskId]);
+      fetchTasks(list_id);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const toggleStatus = (taskId: number, status: string) => {
     async function updateTask() {
@@ -66,7 +83,7 @@ export default function TaskList({tasks, bg_color}: TaskListProps) {
             bgColor="#363533"
             onPress={handleDialogClose}
           />
-          <Button text={'confirm'} bgColor={'#EF5A6F'} onPress={() => {}} />
+          <Button text={'confirm'} bgColor={'#EF5A6F'} onPress={handleDelete} />
         </View>
       </Dialog>
       <FlatList

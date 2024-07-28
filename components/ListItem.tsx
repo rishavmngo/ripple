@@ -1,16 +1,18 @@
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {displayDuration, padNumber} from '@/utils/Utils';
-import {useNavigation} from '@react-navigation/native';
+import {NavigationProp, useNavigation} from '@react-navigation/native';
 import {TListItem} from '@/model';
 
-interface ListItemProps {
+type RootStackParamList = {
+  Detail: {id: string};
+};
+type ListItemProps = {
   item: TListItem;
   index: number;
-}
-
+};
 function ListItem({item, index}: ListItemProps) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <Pressable
       onPress={() => {
@@ -19,7 +21,7 @@ function ListItem({item, index}: ListItemProps) {
       style={[index === 0 && style.firstElement]}>
       <View style={[style.mainContainer, {backgroundColor: item.bg_color}]}>
         <Text style={style.durationText}>
-          {displayDuration(item.total_duration)} hr
+          {displayDuration(item.total_duration)}
         </Text>
 
         <Text style={style.titleText}>{item.title}</Text>

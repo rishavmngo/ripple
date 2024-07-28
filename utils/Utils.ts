@@ -14,7 +14,7 @@ export function displayDuration(timeInMinutes: number): string {
   if (timeInMinutes < 60) {
     return `${Math.round(timeInMinutes)} mins`;
   } else {
-    return `${(timeInMinutes / 60).toFixed(2)}`;
+    return `${(timeInMinutes / 60).toFixed(2)} hr`;
   }
 }
 export function padNumber(num: number, pad: number, char = '0') {

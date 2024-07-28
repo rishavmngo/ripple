@@ -1,5 +1,6 @@
-const UPDATE_TASK_STATUS = 'UPDATE Tasks set status = ? WHERE id = ?';
-const SELECT_TASK_WITH_ID = 'SELECT * FROM Tasks where list_id=?';
+const UPDATE_TASK_STATUS = 'UPDATE Tasks SET status = ? WHERE id = ?';
+const SELECT_TASK_WITH_ID = 'SELECT * FROM Tasks WHERE list_id=?';
+const DELETE_TASK_BY_ID = 'DELETE FROM Tasks WHERE id=?';
 const SELECT_LIST_WITH_ID = `SELECT 
   l.id,
   l.title,
@@ -40,6 +41,7 @@ const query = {
   SELECT_TASK_WITH_ID,
   SELECT_LIST_WITH_ID,
   SELECT_ALL_LISTS,
+  DELETE_TASK_BY_ID,
 };
 
 export default query;

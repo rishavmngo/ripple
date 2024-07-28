@@ -1,12 +1,12 @@
 import {displayDuration} from '@/utils/Utils';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {TListItem} from '@/components/List.types';
 import {useSQLiteContext} from 'expo-sqlite';
-import {TTask} from '@/models/Task.type';
 import {RouteProp} from '@react-navigation/native';
 import query from '@/queries/query';
 import TaskList from '@/components/TaskList';
+import {useTasks} from '@/store/store';
+import {TListItem} from '@/model';
 
 type RootStackParamList = {
   Detail: {id: string};
@@ -19,21 +19,15 @@ type DetailProps = {
 export default function Detail({route}: DetailProps) {
   const db = useSQLiteContext();
   const id = route.params.id;
-  const [tasks, setTasks] = useState<TTask[]>([]);
   const [list, setList] = useState<TListItem | null>(null);
+  const tasks = useTasks(state => state.tasks);
+  const fetchTasks = useTasks(state => state.fetchTasks);
 
   useEffect(() => {
-    async function getTasks() {
-      try {
-        let results: TTask[] = await db.getAllAsync(query.SELECT_TASK_WITH_ID, [
-          id,
-        ]);
-        setTasks(results);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+    fetchTasks(parseInt(id, 10));
+  }, [id, fetchTasks]);
 
+  useEffect(() => {
     async function getList() {
       try {
         let result: TListItem | null = await db.getFirstAsync(
@@ -46,7 +40,6 @@ export default function Detail({route}: DetailProps) {
       }
     }
     getList();
-    getTasks();
   }, [db, id]);
 
   if (!list) {
@@ -62,7 +55,7 @@ export default function Detail({route}: DetailProps) {
         <View style={style.headerSection}>
           <Text style={style.titleText}>{list?.title}</Text>
           <Text style={style.listDurationText}>
-            {displayDuration(list?.total_duration)} hr
+            {displayDuration(list?.total_duration)}
           </Text>
         </View>
       </View>
