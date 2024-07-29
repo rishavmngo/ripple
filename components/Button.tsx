@@ -1,3 +1,4 @@
+import colors from '@/utils/Colors';
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 type ButtonType = 'Danger' | 'Warning' | '';
@@ -5,22 +6,24 @@ type buttonProps = {
   text: string;
   onPress: () => void;
   type?: ButtonType;
+  style?: any;
 };
 
 function getStyle(type: ButtonType) {
   switch (type) {
     case 'Danger':
-      return {bgColor: '#EF5A6F', color: '#F8EDED'};
+      return {bgColor: colors.tomato, color: colors.creamWhite};
     case 'Warning':
       return {bgColor: '', color: ''};
     default:
-      return {bgColor: '#363533', color: '#F8EDED'};
+      return {bgColor: colors.littleBlack, color: colors.creamWhite};
   }
 }
 export default function Button({
   text,
   type = '',
   onPress,
+  style,
   ...props
 }: buttonProps) {
   const sty = getStyle(type);
@@ -30,6 +33,7 @@ export default function Button({
       {...props}
       style={{
         backgroundColor: sty.bgColor,
+        ...style,
         ...styles.button,
       }}>
       <Text

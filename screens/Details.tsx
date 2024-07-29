@@ -4,13 +4,14 @@ import {StyleSheet, Text, View} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import TaskList from '@/components/TaskList';
 import {useTasks} from '@/store/store';
-import {ID, TListItem, TTask} from '@/model';
+import {TListItem, TTask} from '@/model';
 import db from '@/db/db';
 import ButtonIcon from '@/components/ButtonIcon';
 import Dialog from '@/components/Dialog';
 import Button from '@/components/Button';
 import {TextInput} from 'react-native-gesture-handler';
 import Slider from '@react-native-community/slider';
+import colors from '@/utils/Colors';
 
 type RootStackParamList = {
   Detail: {id: string};
@@ -111,18 +112,18 @@ export default function Detail({route}: DetailProps) {
             minimumValue={MIN_DURATION}
             value={duration}
             onValueChange={setDuration}
-            minimumTrackTintColor="#9f80ef"
-            maximumTrackTintColor="#3c3c3c"
+            minimumTrackTintColor={colors.lightPurple}
+            maximumTrackTintColor={colors.lightBlack}
             tapToSeek
           />
-          <Text> {MAX_DURATION}</Text>
+          <Text>{MAX_DURATION}</Text>
           <View
             style={{
               width: 50,
               padding: 3,
               borderWidth: 1,
               borderRadius: 5,
-              borderColor: '#9f80ef',
+              borderColor: colors.lightPurple,
               marginLeft: 'auto',
               alignItems: 'center',
               justifyContent: 'center',
@@ -132,13 +133,15 @@ export default function Detail({route}: DetailProps) {
         </View>
         <View style={{marginTop: 30}}>
           <Button
+            disabled={inputValue.length > 0 ? false : true}
+            style={inputValue.length > 0 ? {} : {opacity: 0.5}}
             text={'Add'}
             type="Danger"
             onPress={() => {
               if (inputValue === '') {
                 return;
               }
-              addTask(inputValue, 25, id);
+              addTask(inputValue, duration, parseInt(id, 10));
               resetStates();
               handleDialogClose();
             }}

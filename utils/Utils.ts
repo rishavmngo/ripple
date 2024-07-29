@@ -10,11 +10,22 @@ export const COLOR_PALLETE = [
   '#80B9AD',
 ];
 
-export function displayDuration(timeInMinutes: number): string {
+export function displayDuration(
+  timeInMinutes: number,
+  longUnitName: boolean = false,
+): string {
   if (timeInMinutes < 60) {
-    return `${Math.round(timeInMinutes)} mins`;
+    return `${padNumber(timeInMinutes, 2)} ${
+      longUnitName ? 'minutes' : 'mins'
+    }`;
+  } else if (timeInMinutes % 60 === 0) {
+    return `${padNumber(timeInMinutes / 60, 2)} ${
+      longUnitName ? 'hours' : 'hrs'
+    }`;
   } else {
-    return `${(timeInMinutes / 60).toFixed(2)} hr`;
+    return `${(timeInMinutes / 60).toFixed(2)} ${
+      longUnitName ? 'hours' : 'hrs'
+    }`;
   }
 }
 export function padNumber(num: number, pad: number, char = '0') {

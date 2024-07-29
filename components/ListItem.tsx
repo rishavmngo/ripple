@@ -62,8 +62,8 @@ const style = StyleSheet.create({
   },
   noOfItemsText: {
     position: 'absolute',
-    bottom: 25,
-    right: 20,
+    bottom: 35,
+    right: 25,
   },
 });
 

@@ -2,10 +2,11 @@ import React from 'react';
 import {TouchableOpacity, StyleSheet} from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome6';
-type ButtonType = 'Danger' | 'Warning' | '';
+type ButtonType = 'Danger' | 'Warning' | '' | 'Outline';
 type buttonProps = {
   onPress: () => void;
   type?: ButtonType;
+  border?: any;
 };
 
 function getStyle(type: ButtonType) {
@@ -21,6 +22,7 @@ function getStyle(type: ButtonType) {
 export default function ButtonIcon({
   type = '',
   onPress,
+  border,
   ...props
 }: buttonProps) {
   const sty = getStyle(type);
@@ -31,6 +33,7 @@ export default function ButtonIcon({
       style={{
         backgroundColor: sty.bgColor,
         ...styles.button,
+        ...border,
       }}>
       <Icon name="plus" style={{color: 'white'}} size={20} />
     </TouchableOpacity>
@@ -40,7 +43,7 @@ export default function ButtonIcon({
 const styles = StyleSheet.create({
   button: {
     padding: 15,
-    borderRadius: 20,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },

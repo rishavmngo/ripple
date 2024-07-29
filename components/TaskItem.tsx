@@ -74,9 +74,15 @@ export default function TaskItem({
         <View>
           <>
             <Text style={style.taskDurationText}>
-              {displayDuration(task.duration)} hours
+              {displayDuration(task.duration, true)}
             </Text>
-            <Text style={style.taskTitleText}>{task.title}</Text>
+            <Text
+              style={[
+                checked ? style.completedTask : style.unCompletedTask,
+                style.taskTitleText,
+              ]}>
+              {task.title}
+            </Text>
           </>
         </View>
       </Pressable>
@@ -120,10 +126,16 @@ const style = StyleSheet.create({
   },
   taskTitleText: {
     fontSize: 20,
-    color: 'white',
   },
   taskDurationText: {
     fontSize: 12,
     color: '#C3C3C3',
+  },
+  completedTask: {
+    color: 'gray',
+    textDecorationLine: 'line-through',
+  },
+  unCompletedTask: {
+    color: 'white',
   },
 });
