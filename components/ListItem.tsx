@@ -2,7 +2,7 @@ import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {displayDuration, padNumber} from '@/utils/Utils';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
-import {TListItem} from '@/model';
+import {ID, TListItem} from '@/model';
 
 type RootStackParamList = {
   Detail: {id: string};
@@ -10,16 +10,24 @@ type RootStackParamList = {
 type ListItemProps = {
   item: TListItem;
   index: number;
+  handleDelete: (list: any) => void;
+  deleteState: ID;
 };
-function ListItem({item, index}: ListItemProps) {
+function ListItem({item, index, handleDelete, deleteState}: ListItemProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
     <Pressable
+      onLongPress={() => handleDelete(item)}
       onPress={() => {
         navigation.navigate('Detail', {id: item.id.toString()});
       }}
       style={[index === 0 && style.firstElement]}>
-      <View style={[style.mainContainer, {backgroundColor: item.bg_color}]}>
+      <View
+        style={[
+          style.mainContainer,
+          {backgroundColor: item.bg_color},
+          // deleteState === item.id ? style.deleteState : {},
+        ]}>
         <Text style={style.durationText}>
           {displayDuration(item.total_duration)}
         </Text>
@@ -42,6 +50,12 @@ const style = StyleSheet.create({
     width: 200,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  deleteState: {
+    borderWidth: 2,
+    backgroundColor: '#4a6e22',
+    borderColor: '#B4E380',
+    opacity: 0.8,
   },
 
   firstElement: {

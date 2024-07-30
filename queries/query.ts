@@ -1,8 +1,12 @@
 const UPDATE_TASK_STATUS = 'UPDATE Tasks SET status = ? WHERE id = ?';
 const SELECT_TASK_WITH_ID = 'SELECT * FROM Tasks WHERE list_id=?';
 const DELETE_TASK_BY_ID = 'DELETE FROM Tasks WHERE id=?';
+const DELETE_LIST_BY_ID = 'DELETE FROM Lists WHERE id=?';
 const ADD_TASK =
   'INSERT INTO Tasks(title,duration,status,list_id,created_at) VALUES(?,?, ?,?,CURRENT_TIMESTAMP)';
+
+const ADD_LIST =
+  'INSERT INTO Lists(title,bg_color,created_at) VALUES(?,?,CURRENT_TIMESTAMP)';
 const SELECT_LIST_WITH_ID = `SELECT 
   l.id,
   l.title,
@@ -44,7 +48,9 @@ const query = {
   SELECT_LIST_WITH_ID,
   SELECT_ALL_LISTS,
   DELETE_TASK_BY_ID,
+  DELETE_LIST_BY_ID,
   ADD_TASK,
+  ADD_LIST,
 };
 
 export default query;

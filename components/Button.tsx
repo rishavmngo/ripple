@@ -7,6 +7,7 @@ type buttonProps = {
   onPress: () => void;
   type?: ButtonType;
   style?: any;
+  disabled?: boolean;
 };
 
 function getStyle(type: ButtonType) {

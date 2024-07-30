@@ -214,7 +214,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   taskInput: {
-    // borderBottomWidth: 1,
     padding: 10,
     backgroundColor: '#000000',
     borderColor: 'white',

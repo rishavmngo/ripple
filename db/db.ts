@@ -71,11 +71,51 @@ async function addTasks(task: TTask): Promise<boolean> {
     });
   });
 }
+
+async function addList(title: string, bg_color: string): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    sqlliteDB.transaction(tx => {
+      tx.executeSql(
+        query.ADD_LIST,
+        [title, bg_color],
+        (_tx, results) => {
+          console.log(results);
+          resolve(true);
+        },
+        (_tx, error) => {
+          reject(error);
+          return false;
+        },
+      );
+    });
+  });
+}
+
+async function deleteListByID(list_id: ID): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    sqlliteDB.transaction(tx => {
+      tx.executeSql(
+        query.DELETE_LIST_BY_ID,
+        [list_id],
+        (_tx, results) => {
+          console.log(results);
+          resolve(true);
+        },
+        (_tx, error) => {
+          reject(error);
+          return false;
+        },
+      );
+    });
+  });
+}
 const db = {
   getTasks,
   getAllLists,
   getListById,
   addTasks,
+  addList,
+  deleteListByID,
 };
 
 export default db;
