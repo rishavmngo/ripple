@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 
 import {View, Text, StyleSheet, FlatList, TextInput} from 'react-native';
 import ListItem from '@/components/ListItem';
-import {ID, TListItem} from '@/model';
+import {TListItem} from '@/model';
 import db from '@/db/db';
 import {useIsFocused} from '@react-navigation/native';
 import ButtonIcon from './ButtonIcon';
@@ -16,31 +16,19 @@ export default function ListSection() {
   const [inputValue, setInputValue] = useState('');
   const [deleteState, setDeleteState] = useState<any>({});
   const [selectedList, setSelectedList] = useState<TListItem | null>(null);
+  const isFocused = useIsFocused();
 
-  function handleAddListDialogClose() {
+  //helper function
+  const handleAddListDialogClose = () => {
     toggleAddListDialog(!addListdialogOpen);
-  }
+  };
 
-  function handleDeleteListDialogClose() {
+  const handleDeleteListDialogClose = () => {
     toggleDeleteListDialog(!deleteListdialogOpen);
-  }
+  };
   const resetStates = () => {
     setInputValue('');
   };
-  const isFocused = useIsFocused();
-  useEffect(() => {
-    async function setup() {
-      try {
-        let results: TListItem[] = await db.getAllLists();
-        setItems(results);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    if (isFocused) {
-      setup();
-    }
-  }, [isFocused]);
 
   const addList = async (title: string, bg_color = '#0f0f0f') => {
     try {
@@ -71,6 +59,21 @@ export default function ListSection() {
     setDeleteState(item.id);
     toggleDeleteListDialog(true);
   };
+
+  //load the lists whenever this component comes on focus
+  useEffect(() => {
+    async function setup() {
+      try {
+        let results: TListItem[] = await db.getAllLists();
+        setItems(results);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    if (isFocused) {
+      setup();
+    }
+  }, [isFocused]);
 
   return (
     <>

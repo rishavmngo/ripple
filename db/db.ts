@@ -47,6 +47,15 @@ async function getAllLists(): Promise<TListItem[]> {
   });
 }
 
+async function getAllTasksFromToday(): Promise<TListItem[]> {
+  return executeSql(query.SELECT_TASKS_FROM_TODAY, [], results => {
+    const lists = [];
+    for (let i = 0; i < results.rows.length; i++) {
+      lists.push(results.rows.item(i));
+    }
+    return lists;
+  });
+}
 async function getListById(id: string): Promise<TListItem> {
   return executeSql(query.SELECT_LIST_WITH_ID, [id], results => {
     return results.rows._array[0];
@@ -113,6 +122,7 @@ const db = {
   getTasks,
   getAllLists,
   getListById,
+  getAllTasksFromToday,
   addTasks,
   addList,
   deleteListByID,
