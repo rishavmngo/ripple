@@ -29,6 +29,9 @@ export function displayDuration(
   }
 }
 export function padNumber(num: number, pad: number, char = '0') {
+  if (num == 0) {
+    pad = 1;
+  }
   return String(num).padStart(pad, char);
 }
 
