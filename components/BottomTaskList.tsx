@@ -12,21 +12,23 @@ import {useIsFocused} from '@react-navigation/native';
 import db from '@/db/db';
 import DatePicker from 'react-native-date-picker';
 import Icon from 'react-native-vector-icons/FontAwesome6';
-import {displayDate} from '@/utils/Utils';
+import {displayDate, padNumber} from '@/utils/Utils';
 
 export default function BottomTaskList() {
   const [date, setDate] = useState(new Date());
   const [datePickerShow, setDatePickerVisible] = useState(false);
   const [taskLists, setTaskLists] = useState<any[]>([]);
+  const [taskCount, setTaskCount] = useState<number>(0);
   const isFocused = useIsFocused();
 
   useEffect(() => {
     async function setup() {
       try {
         let results: any[] = await db.getAllTasksByDate(date);
-        for (let i = 0; i < results.length; i++) {
-          console.log(results[i]);
-        }
+        setTaskCount(results.length);
+        // for (let i = 0; i < results.length; i++) {
+        //   console.log(results[i]);
+        // }
         setTaskLists(results);
       } catch (error) {
         console.error(error);
@@ -54,7 +56,9 @@ export default function BottomTaskList() {
       <View style={style.bottomSheetContainer}>
         <View style={style.headerContainer}>
           <View style={style.taskCountContainer}>
-            <Text style={style.taskCountText}>03 tasks</Text>
+            <Text style={style.taskCountText}>
+              {padNumber(taskCount, 2)} tasks
+            </Text>
             <TouchableOpacity>
               <Text style={style.addButton}>+</Text>
             </TouchableOpacity>
@@ -142,8 +146,6 @@ const style = StyleSheet.create({
     padding: 5,
     paddingHorizontal: 20,
     borderRadius: 100,
-    // height: 15,
-    // width: 15,
   },
 
   listSelectorContainer: {
