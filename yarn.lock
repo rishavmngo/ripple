@@ -6119,6 +6119,11 @@ react-native-bouncy-checkbox@^4.0.1:
   dependencies:
     "@freakycoder/react-native-bounceable" "^1.0.3"
 
+react-native-date-picker@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.npmjs.org/react-native-date-picker/-/react-native-date-picker-5.0.4.tgz"
+  integrity sha512-UycNfXGd4ipgdU2a+oZGj7h1nvp8Gz49f/Ko+YdWh6nrBKB49MEp0n9eF1QngbxMKqdK0AdY4udb4IdVVWji4g==
+
 react-native-gesture-handler@^2.17.1:
   version "2.17.1"
   resolved "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.17.1.tgz"
@@ -6169,7 +6174,7 @@ react-native-vector-icons@^10.1.0:
     prop-types "^15.7.2"
     yargs "^16.1.1"
 
-react-native@*, "react-native@>= 0.62", react-native@0.74.3:
+react-native@*, "react-native@>= 0.62", "react-native@>= 0.64.3", react-native@0.74.3:
   version "0.74.3"
   dependencies:
     "@jest/create-cache-key-function" "^29.6.3"
@@ -6226,7 +6231,7 @@ react-test-renderer@18.2.0:
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.0"
 
-react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.2.0, react@>=16.8, react@>=17.0.0, react@18.2.0:
+react@*, "react@^16.0.0 || ^17.0.0 || ^18.0.0", "react@^16.8.0 || ^17.0.0 || ^18.0.0", react@^18.2.0, "react@>= 17.0.1", react@>=16.8, react@>=17.0.0, react@18.2.0:
   version "18.2.0"
   dependencies:
     loose-envify "^1.1.0"

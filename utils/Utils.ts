@@ -38,6 +38,18 @@ export function getRandomColorFromPallet(): string {
   return COLOR_PALLETE[index];
 }
 
+export function displayDate(date) {
+  const day = date.getDate();
+  const dayOfWeek = date.toString().split(' ')[0];
+  const today = new Date();
+
+  if (date.setHours(0, 0, 0, 0) === today.setHours(0, 0, 0, 0)) {
+    return 'today';
+  }
+
+  return `${day} ${dayOfWeek}`;
+}
+
 export function sleep(milliseconds: number) {
   const date = Date.now();
   let currentDate = null;

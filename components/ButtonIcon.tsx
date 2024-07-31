@@ -4,6 +4,7 @@ import {TouchableOpacity, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome6';
 type ButtonType = 'Danger' | 'Warning' | '' | 'Outline';
 type buttonProps = {
+  name: string;
   onPress: () => void;
   type?: ButtonType;
   border?: any;
@@ -20,6 +21,7 @@ function getStyle(type: ButtonType) {
   }
 }
 export default function ButtonIcon({
+  name = 'plus',
   type = '',
   onPress,
   border,
@@ -35,7 +37,7 @@ export default function ButtonIcon({
         ...styles.button,
         ...border,
       }}>
-      <Icon name="plus" style={{color: 'white'}} size={20} />
+      <Icon name={name} style={{color: 'white'}} size={20} />
     </TouchableOpacity>
   );
 }
